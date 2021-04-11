@@ -33,23 +33,28 @@ const List<String> cryptoList = [
 ];
 
 class CoinData {
-  Future getCoinData(String currency) async {
-    const openWeatherMapURL = 'apiv2.bitcoinaverage.com';
-    const unencodedPath = '/indices/global/ticker/BTC';
-    const apikey = 'NTI3NmU3MmVmMzRmNGUwYTgwNTQyYWFjNzZlZjVhYjc';
+  Future getCoinData(String selectedCurrency) async {
+    const openWeatherMapURL = 'rest.coinapi.io';
+    const unencodedPath = '/v1/exchangerate/';
+    const apikey = 'B188F3C2-A2D5-46B2-8C92-D7212F12F1DB';
     Map<String, dynamic> queryParams = {};
 
-    var url = Uri.https(openWeatherMapURL, unencodedPath+currency, queryParams);
+    Map<String, String> cryptoPrices = {};
+    for (String crypto in cryptoList) {
 
-    http.Response response = await http.get(url, headers: {'x-ba-key': apikey});
+      var url = Uri.https(openWeatherMapURL, unencodedPath+crypto+'/'+selectedCurrency, queryParams);
+      http.Response response = await http.get(url, headers: {'X-CoinAPI-Key': apikey});
 
-    if (response.statusCode == 200) {
-      var decodedData = jsonDecode(response.body);
-      var lastPrice = decodedData['last'];
-      return lastPrice;
-    } else {
-      print(response.body);
-      print(response.statusCode);
+      if (response.statusCode == 200) {
+        var decodedData = jsonDecode(response.body);
+        double lastPrice = decodedData['rate'];
+        cryptoPrices[crypto] = lastPrice.toStringAsFixed(0);
+      } else {
+        print(response.statusCode);
+        print(response.body);
+        throw 'Problem with the get request';
+      }
     }
+    return cryptoPrices;
   }
 }
