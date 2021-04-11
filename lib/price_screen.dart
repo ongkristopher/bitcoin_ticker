@@ -55,6 +55,7 @@ class _PriceScreenState extends State<PriceScreen> {
       backgroundColor: Colors.lightBlue,
       itemExtent: 32.0,
       onSelectedItemChanged: (selectedIndex) async {
+        selectedCurrency = currenciesList[selectedIndex];
         getData();
       },
       children: pickerItems,
@@ -62,7 +63,7 @@ class _PriceScreenState extends State<PriceScreen> {
   }
 
   void getData() async{
-    double data = await CoinData().getCoinData();
+    double data = await CoinData().getCoinData(selectedCurrency);
     setState(() {
       bitcoinValueInUSD = data?.toStringAsFixed(0);
     });

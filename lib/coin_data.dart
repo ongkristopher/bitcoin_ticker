@@ -22,7 +22,8 @@ const List<String> currenciesList = [
   'SEK',
   'SGD',
   'USD',
-  'ZAR'
+  'ZAR',
+  'PHP'
 ];
 
 const List<String> cryptoList = [
@@ -32,13 +33,13 @@ const List<String> cryptoList = [
 ];
 
 class CoinData {
-  Future getCoinData() async {
+  Future getCoinData(String currency) async {
     const openWeatherMapURL = 'apiv2.bitcoinaverage.com';
-    const unencodedPath = '/indices/global/ticker/BTCUSD';
+    const unencodedPath = '/indices/global/ticker/BTC';
     const apikey = 'NTI3NmU3MmVmMzRmNGUwYTgwNTQyYWFjNzZlZjVhYjc';
     Map<String, dynamic> queryParams = {};
 
-    var url = Uri.https(openWeatherMapURL, unencodedPath, queryParams);
+    var url = Uri.https(openWeatherMapURL, unencodedPath+currency, queryParams);
 
     http.Response response = await http.get(url, headers: {'x-ba-key': apikey});
 
